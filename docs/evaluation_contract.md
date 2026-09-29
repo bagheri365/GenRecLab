@@ -28,3 +28,25 @@ At `k=10`: NDCG, MRR, and Recall.
 ## Invalidation
 
 Broken runs are preserved and marked invalid. Leakage, candidate mismatches, or accidental contract changes invalidate comparisons.
+
+## Multi-positive temporal evaluation (v0.2)
+
+MovieLens can contain several interactions for the same user at exactly the
+same timestamp. GenRecLab does not invent an ordering inside such timestamp
+groups. Validation and test therefore support multiple relevant items.
+
+For a held-out timestamp group:
+
+- all movies in the group are relevant positives;
+- observed history items are excluded from the candidate catalog;
+- held-out relevant items are always retained as candidates;
+- Recall@K is the fraction of held-out positives retrieved;
+- MRR@K is the reciprocal rank of the first retrieved positive;
+- NDCG@K uses binary relevance and the ideal ranking for the number of
+  available positives;
+- score ties are resolved deterministically.
+
+Headline full-catalog evaluation must use this contract. Sampled-candidate
+experiments, if added later, must be reported separately and document their
+negative-sampling procedure.
+\n
