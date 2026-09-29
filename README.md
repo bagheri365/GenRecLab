@@ -25,3 +25,11 @@ pytest
 ```
 
 See `docs/research_plan.md` and `docs/evaluation_contract.md`.
+
+## Prepare MovieLens 1M
+
+```bash
+python scripts/prepare_movielens.py
+```
+
+This downloads MovieLens 1M into `data/raw/` and writes deterministic temporal split artifacts under `data/processed/ml-1m/`. Both directories are ignored by Git.
