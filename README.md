@@ -33,3 +33,11 @@ python scripts/prepare_movielens.py
 ```
 
 This downloads MovieLens 1M into `data/raw/` and writes deterministic temporal split artifacts under `data/processed/ml-1m/`. Both directories are ignored by Git.
+
+## M0: Popularity baseline
+
+Run with: `python scripts/run_popularity.py`
+
+M0 ranks candidate movies by interaction frequency in the training split only. Validation and test interactions never contribute to popularity counts. Evaluation uses the shared full-catalog temporal protocol with seen-item filtering, timestamp-group multi-positive relevance, and Recall@K, MRR@K, and NDCG@K.
+
+Results are written to `results/raw/m0_popularity.json`.
