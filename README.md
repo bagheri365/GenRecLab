@@ -41,3 +41,7 @@ Run with: `python scripts/run_popularity.py`
 M0 ranks candidate movies by interaction frequency in the training split only. Validation and test interactions never contribute to popularity counts. Evaluation uses the shared full-catalog temporal protocol with seen-item filtering, timestamp-group multi-positive relevance, and Recall@K, MRR@K, and NDCG@K.
 
 Results are written to `results/raw/m0_popularity.json`.
+
+## M1: Matrix factorization
+
+M1 uses implicit-feedback BPR matrix factorization. Hyperparameter selection uses validation only; test evaluation requires the explicit `--evaluate-test` flag. With 32 factors and seed 42, epochs {1, 5, 10, 20, 30} were evaluated on validation, and 20 epochs was selected by validation NDCG@10. Run the frozen configuration with: `python scripts/run_matrix_factorization.py --factors 32 --epochs 20 --seed 42 --evaluate-test`.

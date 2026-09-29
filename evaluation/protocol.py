@@ -21,6 +21,11 @@ ScoreFunction = Callable[
     dict[Hashable, float],
 ]
 
+UserScoreFunction = Callable[
+    [Hashable, Iterable[Hashable]],
+    dict[Hashable, float],
+]
+
 
 def build_user_histories(
     train: pd.DataFrame,
@@ -67,7 +72,8 @@ def evaluate_full_catalog(
     catalog_items: Iterable[Hashable],
     history_by_user: dict[Hashable, set[Hashable]],
     relevant_by_user: dict[Hashable, set[Hashable]],
-    score_items: ScoreFunction,
+    score_items: ScoreFunction | None = None,
+    score_user_items: UserScoreFunction | None = None,
     k: int = 10,
 ) -> dict[str, float | int]:
     """Evaluate under the frozen full-catalog contract."""
@@ -76,6 +82,11 @@ def evaluate_full_catalog(
 
     if not relevant_by_user:
         raise ValueError("relevant_by_user must not be empty")
+
+    if (score_items is None) == (score_user_items is None):
+        raise ValueError(
+            "provide exactly one of score_items or score_user_items"
+        )
 
     catalog = tuple(catalog_items)
 
@@ -90,7 +101,11 @@ def evaluate_full_catalog(
             relevant,
         )
 
-        scores = score_items(candidates)
+        if score_user_items is not None:
+            scores = score_user_items(user_id, candidates)
+        else:
+            assert score_items is not None
+            scores = score_items(candidates)
 
         if set(scores) != set(candidates):
             raise ValueError(

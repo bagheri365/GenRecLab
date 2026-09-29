@@ -121,3 +121,36 @@ def test_evaluator_requires_complete_scores():
             },
             k=2,
         )
+
+
+def test_evaluator_supports_user_dependent_scores():
+    metrics = evaluate_full_catalog(
+        catalog_items=[1, 2, 3],
+        history_by_user={7: {1}},
+        relevant_by_user={7: {3}},
+        score_user_items=lambda user_id, items: {
+            item: (10.0 if user_id == 7 and item == 3 else 0.0)
+            for item in items
+        },
+        k=1,
+    )
+
+    assert metrics["recall@1"] == 1.0
+    assert metrics["mrr@1"] == 1.0
+    assert metrics["ndcg@1"] == 1.0
+
+
+def test_evaluator_rejects_two_scoring_functions():
+    with pytest.raises(ValueError, match="exactly one"):
+        evaluate_full_catalog(
+            catalog_items=[1, 2],
+            history_by_user={1: set()},
+            relevant_by_user={1: {2}},
+            score_items=lambda items: {
+                item: 1.0 for item in items
+            },
+            score_user_items=lambda user_id, items: {
+                item: 1.0 for item in items
+            },
+            k=1,
+        )
