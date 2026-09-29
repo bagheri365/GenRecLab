@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.DS_Store
+data/raw/
+data/processed/
+artifacts/embeddings/
+artifacts/checkpoints/
+results/raw/
