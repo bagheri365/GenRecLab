@@ -9,3 +9,6 @@ data/processed/
 artifacts/embeddings/
 artifacts/checkpoints/
 results/raw/
+
+# Local model checkpoints
+results/checkpoints/

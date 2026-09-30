@@ -1,0 +1,31 @@
+{
+  "experiment": "m2_sasrec_test",
+  "model": {
+    "name": "sasrec_mlx",
+    "dims": 32,
+    "heads": 2,
+    "layers": 1,
+    "mlp_dims": 64,
+    "max_history": 50,
+    "seed": 42,
+    "checkpoint": "results/checkpoints/m2_sasrec_epoch10_seed42.safetensors"
+  },
+  "protocol": {
+    "split": "timestamp_group_v0.2",
+    "candidates": "full_catalog_excluding_seen",
+    "relevance": "multi_positive_timestamp_group",
+    "k": 10,
+    "selection": "validation_ndcg_at_10"
+  },
+  "training": null,
+  "validation": null,
+  "test": {
+    "users": 6039,
+    "recall@10": 0.21118438928920796,
+    "mrr@10": 0.13745718964298198,
+    "ndcg@10": 0.1325561066117531
+  },
+  "runtime": {
+    "evaluation_seconds": 29.637166666798294
+  }
+}
