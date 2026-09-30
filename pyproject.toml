@@ -11,7 +11,10 @@ dependencies = ["numpy>=2.0", "pandas>=2.2"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3"]
-model = ["mlx>=0.32,<0.33; platform_system == 'Darwin' and platform_machine == 'arm64'"]
+model = [
+    "mlx>=0.32,<0.33; platform_system == 'Darwin' and platform_machine == 'arm64'",
+    "mlx-lm==0.31.3; platform_system == 'Darwin' and platform_machine == 'arm64'",
+]
 
 [tool.setuptools.packages.find]
 include = ["genrec*", "evaluation*"]

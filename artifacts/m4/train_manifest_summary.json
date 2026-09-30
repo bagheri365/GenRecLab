@@ -1,0 +1,11 @@
+{
+  "contract": "m4-frozen-qwen-v1",
+  "seed": 42,
+  "sample_size": 25000,
+  "min_history": 50,
+  "eligible_examples": 336184,
+  "eligible_users": 4037,
+  "sampled_examples": 25000,
+  "sampled_users": 4037,
+  "manifest_sha256": "53062681e5fbb53b0c6cb329beca4b98b8dc09c9ec4b702e7896c3164cb17b93"
+}

@@ -15,3 +15,6 @@ results/checkpoints/
 
 # Generated frozen embedding caches
 data/embeddings/
+
+# Generated M4 representation inputs
+artifacts/m4/train_manifest.json
