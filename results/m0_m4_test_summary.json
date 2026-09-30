@@ -1,0 +1,47 @@
+{
+  "dataset": "MovieLens 1M",
+  "evaluation_split": "test",
+  "protocol": {
+    "split": "timestamp_group_v0.2",
+    "candidates": "full_catalog_excluding_seen",
+    "relevance": "multi_positive_timestamp_group",
+    "k": 10
+  },
+  "models": {
+    "m0_popularity": {
+      "users": 6039,
+      "recall@10": 0.039395582155145,
+      "mrr@10": 0.024737881022034027,
+      "ndcg@10": 0.023101784795035822,
+      "source": "results/raw/m0_popularity.json"
+    },
+    "m1_matrix_factorization": {
+      "users": 6039,
+      "recall@10": 0.06630977300376208,
+      "mrr@10": 0.041471506635441066,
+      "ndcg@10": 0.038782323734170655,
+      "source": "results/raw/m1_matrix_factorization.json"
+    },
+    "m2_sasrec": {
+      "users": 6039,
+      "recall@10": 0.21118438928920796,
+      "mrr@10": 0.13745718964298198,
+      "ndcg@10": 0.1325561066117531,
+      "source": "results/raw/m2_sasrec_test_epoch10_seed42.json"
+    },
+    "m3_frozen_semantic": {
+      "users": 6039,
+      "recall@10": 0.02173924031847529,
+      "mrr@10": 0.014708035336450638,
+      "ndcg@10": 0.012555061103390962,
+      "source": "results/raw/m3_semantic_test.json"
+    },
+    "m4_frozen_qwen_ranking_head": {
+      "users": 6039,
+      "recall@10": 0.04007931131627108,
+      "mrr@10": 0.025947478952943435,
+      "ndcg@10": 0.023483955270392258,
+      "source": "results/raw/m4_frozen_qwen_test.json"
+    }
+  }
+}
