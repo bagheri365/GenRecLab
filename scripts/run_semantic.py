@@ -44,6 +44,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-history", type=int, default=50)
     parser.add_argument("--k", type=int, default=10)
     parser.add_argument(
+        "--split",
+        choices=("validation", "test"),
+        default="validation",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=Path(
@@ -61,16 +66,31 @@ def main() -> None:
     validation = pd.read_csv(
         args.data / "validation.csv"
     )
+    test = pd.read_csv(args.data / "test.csv")
     movies = pd.read_csv(args.data / "movies.csv")
+
+    if args.split == "validation":
+        history_frame = train
+        evaluation = validation
+        history_source = "train_only"
+    else:
+        history_frame = pd.concat(
+            [train, validation],
+            ignore_index=True,
+        )
+        evaluation = test
+        history_source = "train_plus_validation"
 
     model = FrozenSemanticRecommender.from_npz(
         str(args.embeddings),
         max_history=args.max_history,
     )
 
-    grouped_history = timestamp_group_histories(train)
-    filter_history = build_user_histories(train)
-    relevant = held_out_groups(validation)
+    grouped_history = timestamp_group_histories(
+        history_frame
+    )
+    filter_history = build_user_histories(history_frame)
+    relevant = held_out_groups(evaluation)
     catalog = movies["movie_id"].tolist()
 
     def score_user_items(user_id, candidates):
@@ -117,16 +137,22 @@ def main() -> None:
             "validation_interactions": int(
                 len(validation)
             ),
+            "test_interactions": int(len(test)),
             "catalog_movies": int(len(movies)),
         },
         "protocol": {
             "split": "timestamp_group_v0.2",
             "candidates": "full_catalog_excluding_seen",
             "relevance": "multi_positive_timestamp_group",
-            "evaluation_split": "validation_only",
+            "evaluation_split": (
+                "validation_only"
+                if args.split == "validation"
+                else "test_only"
+            ),
+            "history_source": history_source,
             "k": args.k,
         },
-        "validation": metrics,
+        args.split: metrics,
         "runtime": {
             "seconds": elapsed,
             "python": platform.python_version(),

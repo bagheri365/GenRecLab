@@ -1,0 +1,40 @@
+{
+  "experiment": "m3_frozen_semantic",
+  "model": {
+    "encoder": "qwen3-embedding:0.6b",
+    "embedding_dim": 1024,
+    "trainable_parameters": 0,
+    "pooling": "uniform_mean",
+    "history_selection": "recent_complete_timestamp_groups",
+    "minimum_history_items": 50,
+    "short_history_policy": "use_all_available",
+    "timestamp_tie_policy": "never_split_group",
+    "scoring": "cosine_similarity"
+  },
+  "dataset": {
+    "name": "MovieLens 1M",
+    "train_interactions": 976284,
+    "validation_interactions": 12371,
+    "test_interactions": 11534,
+    "catalog_movies": 3883
+  },
+  "protocol": {
+    "split": "timestamp_group_v0.2",
+    "candidates": "full_catalog_excluding_seen",
+    "relevance": "multi_positive_timestamp_group",
+    "evaluation_split": "test_only",
+    "history_source": "train_plus_validation",
+    "k": 10
+  },
+  "test": {
+    "users": 6039,
+    "recall@10": 0.02173924031847529,
+    "mrr@10": 0.014708035336450638,
+    "ndcg@10": 0.012555061103390962
+  },
+  "runtime": {
+    "seconds": 36.21298937500069,
+    "python": "3.12.13",
+    "generated_at_utc": "2026-09-30T21:45:46.154642+00:00"
+  }
+}
