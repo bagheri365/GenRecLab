@@ -12,3 +12,6 @@ results/raw/
 
 # Local model checkpoints
 results/checkpoints/
+
+# Generated frozen embedding caches
+data/embeddings/
