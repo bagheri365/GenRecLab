@@ -62,3 +62,35 @@ def validate_representations(
 
     if not np.isfinite(representations).all():
         raise ValueError("representations contain non-finite values")
+
+
+def validation_histories(
+    train,
+    validation,
+    *,
+    min_items: int = 50,
+) -> dict[int, list[int]]:
+    """Build validation inference histories from train interactions only."""
+    from genrec.semantic import (
+        recent_complete_groups,
+        timestamp_group_histories,
+    )
+
+    groups = timestamp_group_histories(train)
+    users = sorted(
+        validation["user_id"].astype(int).unique()
+    )
+
+    missing = set(users) - set(groups)
+    if missing:
+        raise ValueError(
+            f"{len(missing)} validation users have no train history"
+        )
+
+    return {
+        user_id: recent_complete_groups(
+            groups[user_id],
+            min_items=min_items,
+        )
+        for user_id in users
+    }
