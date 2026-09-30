@@ -19,6 +19,7 @@ from genrec.qwen_cache import (
     POOLING,
     example_id,
     file_sha256,
+    test_histories,
     validate_representations,
     validation_histories,
 )
@@ -28,7 +29,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--split",
-        choices=("train", "validation"),
+        choices=("train", "validation", "test"),
         default="train",
     )
     parser.add_argument("--limit", type=int, default=None)
@@ -55,11 +56,34 @@ def _inputs(args, data_dir, manifest_path):
     validation_path = data_dir / "validation.csv"
     train = pd.read_csv(train_path)
     validation = pd.read_csv(validation_path)
-    histories = validation_histories(
-        train,
-        validation,
-        min_items=50,
-    )
+    if args.split == "validation":
+        histories = validation_histories(
+            train,
+            validation,
+            min_items=50,
+        )
+        source_provenance = {
+            "history_source": "train_only",
+            "history_min_items": 50,
+            "train_sha256": file_sha256(train_path),
+            "validation_sha256": file_sha256(validation_path),
+        }
+    else:
+        test_path = data_dir / "test.csv"
+        test = pd.read_csv(test_path)
+        histories = test_histories(
+            train,
+            validation,
+            test,
+            min_items=50,
+        )
+        source_provenance = {
+            "history_source": "train_plus_validation",
+            "history_min_items": 50,
+            "train_sha256": file_sha256(train_path),
+            "validation_sha256": file_sha256(validation_path),
+            "test_sha256": file_sha256(test_path),
+        }
 
     return [
         {
@@ -67,12 +91,7 @@ def _inputs(args, data_dir, manifest_path):
             "history": history,
         }
         for user_id, history in histories.items()
-    ], {
-        "history_source": "train_only",
-        "history_min_items": 50,
-        "train_sha256": file_sha256(train_path),
-        "validation_sha256": file_sha256(validation_path),
-    }
+    ], source_provenance
 
 
 def main() -> None:

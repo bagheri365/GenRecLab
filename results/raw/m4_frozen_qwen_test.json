@@ -1,0 +1,50 @@
+{
+  "experiment": "m4_frozen_qwen_ranking_head",
+  "evaluation": "final_test",
+  "selection_split": "validation_only",
+  "test_used_for_selection": false,
+  "model": {
+    "encoder": "Qwen/Qwen3-0.6B-Base",
+    "encoder_parameters": "frozen",
+    "pooling": "final-layer-final-query-token",
+    "head": "linear_projection_dot_product",
+    "dims": 32,
+    "batch_size": 256,
+    "negatives": 20,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "epochs": 20,
+    "seed": 42
+  },
+  "selected_validation": {
+    "users": 6039,
+    "recall@10": 0.045616774441911055,
+    "mrr@10": 0.029000846350573126,
+    "ndcg@10": 0.026150149520975174
+  },
+  "protocol": {
+    "split": "timestamp_group_v0.2",
+    "candidates": "full_catalog_excluding_seen",
+    "relevance": "multi_positive_timestamp_group",
+    "evaluation_split": "test_only",
+    "history_source": "train_plus_validation",
+    "k": 10
+  },
+  "test": {
+    "users": 6039,
+    "recall@10": 0.04007931131627108,
+    "mrr@10": 0.025947478952943435,
+    "ndcg@10": 0.023483955270392258
+  },
+  "artifacts": {
+    "checkpoint": "results/checkpoints/m4_selected.safetensors",
+    "checkpoint_sha256": "887e25c5e9453186a17996bb3960a389e2b3cd56c3a897150af2e87e4bd83068",
+    "test_cache": "artifacts/m4/qwen/test_full.npz",
+    "test_cache_sha256": "2e9ed671bdc546bdafbe31afab30b29bde09f2ba99856cb9c26e9d5af1557fbc",
+    "selection_provenance": "results/checkpoints/m4_selected_provenance.json",
+    "test_cache_provenance": "artifacts/m4/qwen/test_full_provenance.json"
+  },
+  "runtime": {
+    "evaluation_seconds": 13.678924375000861
+  }
+}

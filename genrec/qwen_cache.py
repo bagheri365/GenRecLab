@@ -94,3 +94,40 @@ def validation_histories(
         )
         for user_id in users
     }
+
+
+def test_histories(
+    train,
+    validation,
+    test,
+    *,
+    min_items: int = 50,
+) -> dict[int, list[int]]:
+    """Build test inference histories from train + validation only."""
+    import pandas as pd
+
+    from genrec.semantic import (
+        recent_complete_groups,
+        timestamp_group_histories,
+    )
+
+    observed = pd.concat(
+        [train, validation],
+        ignore_index=True,
+    )
+    groups = timestamp_group_histories(observed)
+    users = sorted(test["user_id"].astype(int).unique())
+
+    missing = set(users) - set(groups)
+    if missing:
+        raise ValueError(
+            f"{len(missing)} test users have no observed history"
+        )
+
+    return {
+        user_id: recent_complete_groups(
+            groups[user_id],
+            min_items=min_items,
+        )
+        for user_id in users
+    }
